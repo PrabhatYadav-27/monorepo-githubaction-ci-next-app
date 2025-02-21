@@ -1,0 +1,21 @@
+name: Deploy to production environment
+on:
+  push:
+    branches:
+      [production]
+
+jobs:
+    redeploy_everything:
+        name: Redeploy everything to production
+        runs-on: linux
+        steps:
+             name: SSH into Server
+             -run: |
+                echo "${{ secrets.SSH_PRIVATE_KEY }}" &> ~/ssh_key
+                mkdir -p /home/runner/.ssh
+                ls /home/runner/.ssh
+                touch /home/runner/.ssh/known_hosts
+                echo "${{ secrets.KNOWN_HOSTS }}" &> /home/runner/.ssh/known_hosts
+                chmod 700 /home/runner/ssh_key
+                ssh -i ~/ssh_key root@ip_address_of_production_server  -t "cd monorepo-demo/ && git pull origin production && export PATH=/root/.nvm/versions/node/v22.13.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin && npm install -g pnpm && pnpm install && pnpm run build && pm2 restart web-sever && pm2 restart http-sever && pm2 restart ws-sever"
+        
