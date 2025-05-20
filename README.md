@@ -1,21 +1,16 @@
 # Turborepo starter
-
 This Turborepo starter is maintained by the Turborepo core team.
 
 ## Using this example
-
 Run the following command:
-
 ```sh
 npx create-turbo@latest
 ```
 
 ## What's inside?
-
 This Turborepo includes the following packages/apps:
 
 ### Apps and Packages
-
 - `docs`: a [Next.js](https://nextjs.org/) app
 - `web`: another [Next.js](https://nextjs.org/) app
 - `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
@@ -25,33 +20,56 @@ This Turborepo includes the following packages/apps:
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 ### Utilities
-
 This Turborepo has some additional tools already setup for you:
-
 - [TypeScript](https://www.typescriptlang.org/) for static type checking
 - [ESLint](https://eslint.org/) for code linting
 - [Prettier](https://prettier.io) for code formatting
 
+### CI/CD Pipeline
+
+This project uses GitHub Actions for continuous integration and deployment:
+
+#### Development Deployment
+A GitHub Action workflow automatically deploys to the development environment when code is pushed to the `main` branch:
+
+- Workflow: `.github/workflows/deploy-dev.yml`
+- Trigger: Push to `main` branch
+- Process:
+  1. Connects to development server via SSH
+  2. Pulls latest code from the `main` branch
+  3. Installs dependencies with pnpm
+  4. Builds the application
+  5. Restarts services using PM2 (web-server, http-server, ws-server)
+
+#### Production Deployment
+A separate workflow handles production deployments when code is pushed to the `production` branch:
+
+- Workflow: `.github/workflows/deploy-prod.yml`
+- Trigger: Push to `production` branch
+- Process:
+  1. Connects to production server via SSH
+  2. Pulls latest code from the `production` branch
+  3. Installs dependencies with pnpm
+  4. Builds the application
+  5. Restarts services using PM2 (web-server, http-server, ws-server)
+
+> **Note:** Both workflows require SSH keys and known hosts configured as GitHub repository secrets.
+
 ### Build
-
 To build all apps and packages, run the following command:
-
 ```
 cd my-turborepo
 pnpm build
 ```
 
 ### Develop
-
 To develop all apps and packages, run the following command:
-
 ```
 cd my-turborepo
 pnpm dev
 ```
 
 ### Remote Caching
-
 > [!TIP]
 > Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
 
@@ -73,9 +91,7 @@ npx turbo link
 ```
 
 ## Useful Links
-
 Learn more about the power of Turborepo:
-
 - [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
 - [Caching](https://turbo.build/repo/docs/core-concepts/caching)
 - [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
